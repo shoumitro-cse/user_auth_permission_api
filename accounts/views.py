@@ -20,7 +20,7 @@ class UserListCreateView(generics.ListCreateAPIView):
     """
     serializer_class = UserSerializer
     permission_classes = [AllowAny, ]
-    queryset = User.objects.all()
+    queryset = User.objects.all().order_by("id")
 
     @is_authenticated_user
     @is_staff_user
