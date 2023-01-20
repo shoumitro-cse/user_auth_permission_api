@@ -4,6 +4,7 @@ from utils.serializers import ModelSerializer
 
 
 class UserSerializer(ModelSerializer):
+    permission_fields = []
 
     class Meta:
         model = User
