@@ -53,6 +53,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # 'utils.middleware.ValidateAccessTokenMiddleware',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
@@ -134,10 +135,12 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination', # for like ?page=5
     'PAGE_SIZE': 5,
     'DATE_FORMAT': "%d %b %Y",
-    # 'DEFAULT_AUTHENTICATION_CLASSES': [
-    #     'rest_framework_simplejwt.authentication.JWTTokenUserAuthentication', # for microservice
-    #     # 'rest_framework_simplejwt.authentication.JWTAuthentication',
-    # ],
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        # 'rest_framework.authentication.SessionAuthentication',
+        # 'rest_framework.authentication.BasicAuthentication'
+        # 'utils.authentication.BasicAuthentication'
+        'utils.authentication.TokenAuthentication'
+    ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticatedOrReadOnly'
     ],
@@ -160,5 +163,5 @@ SPECTACULAR_SETTINGS = {
     'REDOC_DIST': 'SIDECAR',
 }
 
-ACCESS_TOKEN_LIFETIME = timezone.timedelta(minutes=5)
+ACCESS_TOKEN_LIFETIME = timezone.timedelta(minutes=500)
 REFRESH_TOKEN_LIFETIME = timezone.timedelta(days=7)

@@ -31,16 +31,16 @@ class User(AbstractUser):
         verbose_name_plural = "users"
 
 
-class LoginUsers(models.Model):
-    user = models.OneToOneField(User, related_name="login_user", on_delete=models.CASCADE)
+class UserToken(models.Model):
+    user = models.OneToOneField(User, related_name="user_token", on_delete=models.CASCADE)
     access_token = models.CharField(max_length=40, blank=True, null=True)
     refresh_token = models.CharField(max_length=40, blank=True, null=True)
     access_token_expire_date = models.DateTimeField(null=True, blank=True)
     refresh_token_expire_date = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        verbose_name = "login user"
-        verbose_name_plural = "login users"
+        verbose_name = "token user"
+        verbose_name_plural = "token users"
 
     def save(self, *args, **kwargs):
         if not self.access_token:
@@ -75,9 +75,9 @@ class LoginUsers(models.Model):
 @receiver(post_save, sender=settings.AUTH_USER_MODEL)
 def create_login_token(sender, instance=None, created=False, **kwargs):
     if created:
-        LoginUsers.objects.create(user=instance)
+        UserToken.objects.create(user=instance)
 
 
 @receiver(post_delete, sender=settings.AUTH_USER_MODEL)
 def delete_login_token(sender, instance=None, **kwargs):
-    LoginUsers.objects.filter(user=instance).delete()
+    UserToken.objects.filter(user=instance).delete()
