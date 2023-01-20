@@ -16,26 +16,6 @@ settings = LazySettings()
 
 class ValidateAccessTokenMiddleware(MiddlewareMixin):
 
-    def process_request(self, request):
-        request.user = SimpleLazyObject(lambda: self.get_token_user(request))
-
-    def process_response(self, request, response):
-        return response
-
-    def process_view(self, request, view_func, view_args, view_kwargs):
-        pass
-
-    @staticmethod
-    def get_token_user(request):
-        user = get_user(request)
-        if user.is_authenticated:
-            return user
-        token = TokenAuthentication.get_authenticate_token(request)
-        verify, user = ValidateAccessTokenMiddleware.verify_access_token(token)
-        if not verify:
-            return AnonymousUser()
-        return user
-
     def __call__(self, request):
         try:
             token = TokenAuthentication.get_authenticate_token(request)
