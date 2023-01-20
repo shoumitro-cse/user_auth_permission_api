@@ -51,9 +51,9 @@ MIDDLEWARE = [
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    # 'utils.middleware.ValidateAccessTokenMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'utils.middleware.ValidateAccessTokenMiddleware',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
