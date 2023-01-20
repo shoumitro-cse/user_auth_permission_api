@@ -17,31 +17,31 @@ settings = LazySettings()
 class ValidateAccessTokenMiddleware(MiddlewareMixin):
 
     def process_request(self, request):
-        print("request.user: ", request.user)
         request.user = SimpleLazyObject(lambda: self.get_token_user(request))
-        print("request.user: ", request.user)
-        print("is_authenticated: ", request.user.is_authenticated)
-        print("------end process_request----")
 
     def process_response(self, request, response):
-        print(response)
-        print("------end process_response----")
         return response
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        pass
 
     @staticmethod
     def get_token_user(request):
         user = get_user(request)
         if user.is_authenticated:
             return user
-        verify, user = ValidateAccessTokenMiddleware.verify_access_token(TokenAuthentication.get_authenticate_token(request))
+        token = TokenAuthentication.get_authenticate_token(request)
+        verify, user = ValidateAccessTokenMiddleware.verify_access_token(token)
         if not verify:
             return AnonymousUser()
         return user
 
     def __call__(self, request):
-        print("__call__")
         try:
-            if self.verify_access_token(TokenAuthentication.get_authenticate_token(request))[0]:
+            token = TokenAuthentication.get_authenticate_token(request)
+            verify, user = self.verify_access_token(token)
+            if verify:
+                request.user = user
                 return super().__call__(request)
         except KeyError as e:
             pass
