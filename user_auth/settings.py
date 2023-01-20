@@ -53,11 +53,12 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # 'utils.middleware.ValidateAccessTokenMiddleware',
+    'utils.middleware.ValidateAccessTokenMiddleware',
 ]
 
 AUTH_USER_MODEL = 'accounts.User'
 ROOT_URLCONF = 'user_auth.urls'
+AUTHENTICATION_BACKENDS = ["django.contrib.auth.backends.ModelBackend"]
 
 TEMPLATES = [
     {
@@ -138,11 +139,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         # 'rest_framework.authentication.SessionAuthentication',
         # 'rest_framework.authentication.BasicAuthentication'
-        # 'utils.authentication.BasicAuthentication'
-        'utils.authentication.TokenAuthentication'
+        # 'utils.authentication.TokenAuthentication'
     ],
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticatedOrReadOnly'
+        # 'rest_framework.permissions.IsAuthenticatedOrReadOnly',
+        'rest_framework.permissions.AllowAny',
     ],
     'DEFAULT_RENDERER_CLASSES': [
             'utils.renderers.JSONRenderer',
@@ -163,5 +164,5 @@ SPECTACULAR_SETTINGS = {
     'REDOC_DIST': 'SIDECAR',
 }
 
-ACCESS_TOKEN_LIFETIME = timezone.timedelta(minutes=500)
+ACCESS_TOKEN_LIFETIME = timezone.timedelta(minutes=60*3)
 REFRESH_TOKEN_LIFETIME = timezone.timedelta(days=7)

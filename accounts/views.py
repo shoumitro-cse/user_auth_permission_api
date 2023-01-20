@@ -19,7 +19,7 @@ class UserListCreateView(generics.ListCreateAPIView):
     </div>
     """
     serializer_class = UserSerializer
-    permission_classes = [AllowAny, ]
+    # permission_classes = [AllowAny, ]
     queryset = User.objects.all().order_by("id")
 
     @is_authenticated_user
@@ -45,6 +45,7 @@ class UserUpdateDeleteDestroyView(generics.RetrieveUpdateDestroyAPIView):
     </div>
     """
 
-    permission_classes = [IsAuthenticated, ]
+    # permission_classes = [IsAuthenticated, ]
+    # permission_classes = [AllowAny, ]
     serializer_class = UserSerializer
     queryset = User.objects.all()
