@@ -16,7 +16,7 @@ class ValidateAccessTokenMiddleware(MiddlewareMixin):
                 return super().__call__(request)
         except KeyError as e:
             pass
-        return self.response_render({"token": "Invalid Access Token"})
+        return self.response_render({"token": "Invalid Access Token or expired!"})
 
     @staticmethod
     def get_authenticate_token(request):
