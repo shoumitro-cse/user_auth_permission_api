@@ -1,8 +1,5 @@
-import base64
-import binascii
-from rest_framework.authentication import BasicAuthentication as BaseBasicAuthentication, BaseAuthentication
+from rest_framework.authentication import BaseAuthentication
 from rest_framework.authentication import get_authorization_header
-from django.contrib.auth import authenticate, get_user_model
 from django.utils.translation import gettext_lazy as _
 from rest_framework import exceptions
 from accounts.models import UserToken
@@ -29,9 +26,14 @@ class TokenAuthentication(BaseAuthentication):
     """
 
     def authenticate(self, request):
+        return self.authenticate_credentials(self.get_authenticate_token(request))
+
+    @staticmethod
+    def get_authenticate_token(request):
+        keyword = "Token"
         auth = get_authorization_header(request).split()
 
-        if not auth or auth[0].lower() != self.keyword.lower().encode():
+        if not auth or auth[0].lower() != keyword.lower().encode():
             return None
 
         if len(auth) == 1:
@@ -46,8 +48,7 @@ class TokenAuthentication(BaseAuthentication):
         except UnicodeError:
             msg = _('Invalid token header. Token string should not contain invalid characters.')
             raise exceptions.AuthenticationFailed(msg)
-
-        return self.authenticate_credentials(token)
+        return token
 
     @staticmethod
     def authenticate_credentials(access_token):
