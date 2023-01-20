@@ -29,6 +29,22 @@ class User(AbstractUser):
     class Meta:
         verbose_name = "user"
         verbose_name_plural = "users"
+        permissions = (
+            ("change_address", "Can edit the address of users."),
+            ("view_address", "Can view the address of users."),
+
+            ("change_mobile", "Can edit the mobile numbers of users."),
+            ("view_mobile", "Can view the mobile numbers of users."),
+
+            ("change_email", "Can edit the email of users."),
+            ("view_email", "Can view the email of users."),
+
+            ("change_user_type", "Can edit the user type of users."),
+            ("view_user_type", "Can view the user type of users."),
+
+            ("change_username", "Can edit the username of users."),
+            ("view_username", "Can view the username of users."),
+        )
 
 
 class UserToken(models.Model):

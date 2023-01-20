@@ -22,9 +22,9 @@ class UserListCreateView(generics.ListCreateAPIView):
     # permission_classes = [AllowAny, ]
     queryset = User.objects.all().order_by("id")
 
-    @is_authenticated_user
-    @is_staff_user
-    @is_super_user
+    # @is_authenticated_user
+    # @is_staff_user
+    # @is_super_user
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 
