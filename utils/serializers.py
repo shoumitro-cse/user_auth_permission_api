@@ -8,7 +8,6 @@ class ModelSerializer(BaseModelSerializer):
         data = super().to_representation(instance)
         if not request:
             return data
-        print(str(request.method).upper())
         if str(request.method).upper() in ["PUT", "PATCH"]:
             request_data_keys = dict(request.data).keys()
             for field_name, field_value in sorted(data.items()):

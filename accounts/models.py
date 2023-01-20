@@ -4,25 +4,25 @@ from django.utils import timezone
 from django.conf import settings
 import binascii, os
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 
-
-ADMAIN = 1
+ADMIN = 1
 STAFF = 2
 GENERAL = 3
 
 USER_TYPE_CHOICES = (
-    (ADMAIN, "ADMAIN"),
+    (ADMIN, "ADMIN"),
     (STAFF, "STAFF"),
     (GENERAL, "GENERAL"),
 )
 
 
 class User(AbstractUser):
-    """ User class model used for authentication"""
+    """ User class model used to store user data"""
     user_type = models.PositiveSmallIntegerField(choices=USER_TYPE_CHOICES, default=GENERAL)
     is_staff = models.BooleanField(default=False)
     mobile = models.CharField(max_length=20, blank=True)
+    address = models.TextField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -32,7 +32,7 @@ class User(AbstractUser):
 
 
 class LoginUsers(models.Model):
-    user = models.OneToOneField(User, related_name="login_user",on_delete=models.CASCADE)
+    user = models.OneToOneField(User, related_name="login_user", on_delete=models.CASCADE)
     access_token = models.CharField(max_length=40, blank=True, null=True)
     refresh_token = models.CharField(max_length=40, blank=True, null=True)
     access_token_expire_date = models.DateTimeField(null=True, blank=True)
@@ -76,3 +76,8 @@ class LoginUsers(models.Model):
 def create_login_token(sender, instance=None, created=False, **kwargs):
     if created:
         LoginUsers.objects.create(user=instance)
+
+
+@receiver(post_delete, sender=settings.AUTH_USER_MODEL)
+def delete_login_token(sender, instance=None, **kwargs):
+    LoginUsers.objects.filter(user=instance).delete()
