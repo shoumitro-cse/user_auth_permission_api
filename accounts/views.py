@@ -1,7 +1,7 @@
 from django.contrib.auth.models import Permission, Group
 from rest_framework import generics
 from accounts.models import User
-from accounts.serializers import UserSerializer, PermissionSerializer, UserPermissionSerializer, GroupSerializer, \
+from accounts.serializers import PermUserSerializer, PermissionSerializer, UserPermissionSerializer, GroupSerializer, \
     AddUserWithGroupSerializer
 from utils.decorators import has_access_perm
 
@@ -19,7 +19,7 @@ class UserListCreateView(generics.ListCreateAPIView):
     </ul>
     </div>
     """
-    serializer_class = UserSerializer
+    serializer_class = PermUserSerializer
     queryset = User.objects.all().order_by("id")
 
     # @has_access_perm("accounts:view_user")
@@ -42,7 +42,7 @@ class UserUpdateDeleteDestroyView(generics.RetrieveUpdateDestroyAPIView):
     </ul>
     </div>
     """
-    serializer_class = UserSerializer
+    serializer_class = PermUserSerializer
     queryset = User.objects.all()
 
     @has_access_perm("accounts:delete_user")

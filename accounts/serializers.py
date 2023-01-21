@@ -5,7 +5,7 @@ from utils.serializers import PermissionModelSerializer
 from rest_framework import serializers
 
 
-class UserSerializer(PermissionModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     permission_fields = []
 
     class Meta:
@@ -24,23 +24,27 @@ class UserSerializer(PermissionModelSerializer):
         return user
 
 
-class PermissionSerializer(serializers.ModelSerializer):
+class PermUserSerializer(UserSerializer, PermissionModelSerializer):
+    pass
+
+
+class PermissionSerializer(PermissionModelSerializer):
 
     class Meta:
         model = Permission
         fields = ["id", "name", "content_type", "codename"]
 
 
-class UserPermissionSerializer(serializers.Serializer):
+class UserPermissionSerializer(PermissionModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False)
     permissions = serializers.PrimaryKeyRelatedField(queryset=Permission.objects.all(), many=True)
 
 
-class GroupSerializer(serializers.Serializer):
+class GroupSerializer(PermissionModelSerializer):
     group_name = serializers.CharField(required=True)
     permissions = serializers.PrimaryKeyRelatedField(queryset=Permission.objects.all(), many=True, required=False)
 
 
-class AddUserWithGroupSerializer(serializers.Serializer):
+class AddUserWithGroupSerializer(PermissionModelSerializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False)
     group = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=False)
