@@ -45,6 +45,10 @@ class UserUpdateDeleteDestroyView(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all()
 
+    @has_access_perm("accounts:delete_user")
+    def delete(self, request, *args, **kwargs):
+        return self.destroy(request, *args, **kwargs)
+
 
 class PermissionListView(generics.ListAPIView):
     serializer_class = PermissionSerializer
