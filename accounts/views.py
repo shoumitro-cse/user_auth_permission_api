@@ -2,7 +2,7 @@ from django.contrib.auth.models import Permission, Group
 from rest_framework import generics
 from accounts.models import User
 from accounts.serializers import PermUserSerializer, PermissionSerializer, UserPermissionSerializer, GroupSerializer, \
-    AddUserWithGroupSerializer
+    AddUserWithGroupSerializer, UserSerializer
 from utils.decorators import has_access_perm, is_super_user
 
 
@@ -19,11 +19,12 @@ class UserListCreateView(generics.ListCreateAPIView):
     </ul>
     </div>
     """
-    serializer_class = PermUserSerializer
+    serializer_class = UserSerializer
     queryset = User.objects.all().order_by("id")
 
     # @has_access_perm("accounts:view_user")
     def get(self, request, *args, **kwargs):
+        self.serializer_class = PermUserSerializer
         return super().get(request, *args, **kwargs)
 
 
