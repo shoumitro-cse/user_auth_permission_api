@@ -3,7 +3,7 @@ from rest_framework import generics
 from accounts.models import User
 from accounts.serializers import PermUserSerializer, PermissionSerializer, UserPermissionSerializer, GroupSerializer, \
     AddUserWithGroupSerializer
-from utils.decorators import has_access_perm
+from utils.decorators import has_access_perm, is_super_user
 
 
 class UserListCreateView(generics.ListCreateAPIView):
@@ -54,6 +54,10 @@ class PermissionListView(generics.ListAPIView):
     serializer_class = PermissionSerializer
     queryset = Permission.objects.all()
 
+    @is_super_user
+    def get(self, request, *args, **kwargs):
+        return super().get(request, *args, **kwargs)
+
 
 class UserPermissionCreateView(generics.CreateAPIView):
     """
@@ -73,6 +77,10 @@ class UserPermissionCreateView(generics.CreateAPIView):
      </div>
     """
     serializer_class = UserPermissionSerializer
+
+    @is_super_user
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
 
     def perform_create(self, serializer):
         data = serializer.data
@@ -99,6 +107,10 @@ class GroupCreateView(generics.CreateAPIView):
     """
     serializer_class = GroupSerializer
 
+    @is_super_user
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         data = serializer.data
         group = Group.objects.create(name=data.get("group_name"))
@@ -122,9 +134,13 @@ class AddUserWithGroupView(generics.CreateAPIView):
     """
     serializer_class = AddUserWithGroupSerializer
 
+    @is_super_user
+    def post(self, request, *args, **kwargs):
+        return super().post(request, *args, **kwargs)
+
     def perform_create(self, serializer):
         data = serializer.data
-        user = User.objects.get(name=data.get("user"))
+        user = User.objects.get(id=data.get("user"))
         user.groups.add(data.get("group"))
 
 

@@ -1,8 +1,7 @@
 from django.contrib.auth.models import Permission, Group
-
 from accounts.models import User
-from utils.serializers import PermissionModelSerializer
 from rest_framework import serializers
+from utils.serializers import PermissionModelSerializer
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -28,23 +27,23 @@ class PermUserSerializer(UserSerializer, PermissionModelSerializer):
     pass
 
 
-class PermissionSerializer(PermissionModelSerializer):
+class PermissionSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Permission
         fields = ["id", "name", "content_type", "codename"]
 
 
-class UserPermissionSerializer(PermissionModelSerializer):
+class UserPermissionSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False)
     permissions = serializers.PrimaryKeyRelatedField(queryset=Permission.objects.all(), many=True)
 
 
-class GroupSerializer(PermissionModelSerializer):
+class GroupSerializer(serializers.Serializer):
     group_name = serializers.CharField(required=True)
     permissions = serializers.PrimaryKeyRelatedField(queryset=Permission.objects.all(), many=True, required=False)
 
 
-class AddUserWithGroupSerializer(PermissionModelSerializer):
+class AddUserWithGroupSerializer(serializers.Serializer):
     user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False)
     group = serializers.PrimaryKeyRelatedField(queryset=Group.objects.all(), many=False)
