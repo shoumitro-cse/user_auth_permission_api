@@ -16,4 +16,9 @@ urlpatterns = [
     path('group-create/', views.GroupCreateView.as_view(), name='group_create'),
     #  This URL is used to add user with group
     path('add-user-with-group/', views.AddUserWithGroupView.as_view(), name='add_user_with_group'),
+
+    #  This URL is used to login
+    path('login/', views.SigninView.as_view(), name='login'),
+    #  This URL is used to logout
+    path('logout/', views.LogoutView.as_view(), name='logout'),
 ]
