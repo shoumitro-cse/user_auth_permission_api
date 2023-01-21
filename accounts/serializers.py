@@ -1,9 +1,11 @@
+from django.contrib.auth.models import Permission
 
 from accounts.models import User
-from utils.serializers import ModelSerializer
+from utils.serializers import PermissionModelSerializer
+from rest_framework import serializers
 
 
-class UserSerializer(ModelSerializer):
+class UserSerializer(PermissionModelSerializer):
     permission_fields = []
 
     class Meta:
@@ -21,3 +23,14 @@ class UserSerializer(ModelSerializer):
         user.save()
         return user
 
+
+class PermissionSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Permission
+        fields = ["id", "name", "content_type", "codename"]
+
+
+class UserPermissionSerializer(serializers.Serializer):
+    user = serializers.PrimaryKeyRelatedField(queryset=User.objects.all(), many=False)
+    permissions = serializers.PrimaryKeyRelatedField(queryset=Permission.objects.all(), many=True)

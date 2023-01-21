@@ -63,7 +63,7 @@ class ModelSerializerFieldPermissionMixin(ModelSerializerFieldViewMixin):
         return data
 
 
-class ModelSerializer(ModelSerializerFieldPermissionMixin):
+class PermissionModelSerializer(ModelSerializerFieldPermissionMixin):
     """
        This class will be used to restrict the given functionality.
          ** patch or put method field view permission
