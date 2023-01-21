@@ -12,4 +12,8 @@ urlpatterns = [
     path('permission-list/', views.PermissionListView.as_view(), name='permission_list'),
     #  This URL is used to add user permission
     path('user-permission-create/', views.UserPermissionCreateView.as_view(), name='user_permission_create'),
+    #  This URL is used to add group with permission
+    path('group-create/', views.GroupCreateView.as_view(), name='group_create'),
+    #  This URL is used to add user with group
+    path('add-user-with-group/', views.AddUserWithGroupView.as_view(), name='add_user_with_group'),
 ]

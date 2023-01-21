@@ -1,8 +1,9 @@
-from django.contrib.auth.models import Permission
+from django.contrib.auth.models import Permission, Group
 from rest_framework import generics
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from accounts.models import User
-from accounts.serializers import UserSerializer, PermissionSerializer, UserPermissionSerializer
+from accounts.serializers import UserSerializer, PermissionSerializer, UserPermissionSerializer, GroupSerializer, \
+    AddUserWithGroupSerializer
 from utils.decorators import is_super_user, is_authenticated_user, is_staff_user
 
 
@@ -80,6 +81,54 @@ class UserPermissionCreateView(generics.CreateAPIView):
         data = serializer.data
         user = User.objects.get(id=data.get("user"))
         user.user_permissions.add(*data.get("permissions"))
+
+
+class GroupCreateView(generics.CreateAPIView):
+    """
+    <div>
+       It's used for to add new group. a sample of curl code are given below. <br/><br/>
+            curl -X 'POST' \
+              'http://localhost:8000/auth/group-create/' \
+              -H 'accept: application/json' \
+              -H 'Content-Type: application/json' \
+              -H 'X-CSRFTOKEN: PUuMbqultLYoHUMktlbbKHcm3qx7TzJL6eWjxgEepsUQWLNTdMW2vZNhg5AtLYIk' \
+              -d '{
+              "group_name": "manager",
+              "permissions": [
+                21,29
+              ]
+            }'
+    </div>
+    """
+    serializer_class = GroupSerializer
+
+    def perform_create(self, serializer):
+        data = serializer.data
+        group = Group.objects.create(name=data.get("group_name"))
+        group.permissions.set(data.get("permissions"))
+
+
+class AddUserWithGroupView(generics.CreateAPIView):
+    """
+    <div>
+       It's used for to add user with group. a sample of curl code are given below. <br/><br/>
+            curl -X 'POST' \
+              'http://localhost:8000/auth/add-user-with-group/' \
+              -H 'accept: application/json' \
+              -H 'Content-Type: application/json' \
+              -H 'X-CSRFTOKEN: fVFw5hgthYhem4QtYrX1iImFLWhyfLxAwf73r7qmdFdGBVR2ISIS30XAYBkU7aw9' \
+              -d '{
+              "user": 2,
+              "group": 1
+            }'
+    </div>
+    """
+    serializer_class = AddUserWithGroupSerializer
+
+    def perform_create(self, serializer):
+        data = serializer.data
+        user = User.objects.get(name=data.get("user"))
+        user.groups.add(data.get("group"))
 
 
 
