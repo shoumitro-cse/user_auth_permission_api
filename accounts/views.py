@@ -22,7 +22,7 @@ class UserListCreateView(generics.ListCreateAPIView):
     serializer_class = UserSerializer
     queryset = User.objects.all().order_by("id")
 
-    @has_access_perm("accounts:view_user")
+    # @has_access_perm("accounts:view_user")
     def get(self, request, *args, **kwargs):
         return super().get(request, *args, **kwargs)
 

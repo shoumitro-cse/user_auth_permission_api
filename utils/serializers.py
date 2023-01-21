@@ -48,10 +48,10 @@ class ModelSerializerFieldPermissionMixin(ModelSerializerFieldViewMixin):
     def to_representation(self, instance):
         """ for column view permission"""
         data = super().to_representation(instance)
+        app_name = self.Meta.model._meta.app_label
+        perm_name = str(self.Meta.model.__name__).lower()
         if self.context.get('request', None):
             current_user = self.context['request'].user
-            app_name = self.Meta.model._meta.app_label
-            perm_name = str(self.Meta.model.__name__).lower()
             model_view_perm_text = '{}.view_{}'.format(app_name, perm_name)
             # check model or table level view permission
             if not current_user.has_perm(model_view_perm_text):
@@ -61,6 +61,9 @@ class ModelSerializerFieldPermissionMixin(ModelSerializerFieldViewMixin):
                     if not current_user.has_perm(full_perm_text):
                         # remove field if it's not permitted
                         data.pop(field_name)
+        if not data:
+            raise ValidationError({
+                "detail": f"{perm_name.capitalize()} model not allowed to view any columns or records."})
         return data
 
     def to_internal_value(self, data):
