@@ -52,7 +52,7 @@ class GroupCreateView(generics.CreateAPIView):
               'http://localhost:8000/auth/group-create/' \
               -H 'accept: application/json' \
               -H 'Content-Type: application/json' \
-              -H 'X-CSRFTOKEN: PUuMbqultLYoHUMktlbbKHcm3qx7TzJL6eWjxgEepsUQWLNTdMW2vZNhg5AtLYIk' \
+              -H 'Authorization: Token 7f843d73b3d549ba1e5b85a2c1bd1b323d4cd8e6' \
               -d '{
               "group_name": "manager",
               "permissions": [
@@ -81,7 +81,7 @@ class AddUserWithGroupView(generics.CreateAPIView):
               'http://localhost:8000/auth/add-user-with-group/' \
               -H 'accept: application/json' \
               -H 'Content-Type: application/json' \
-              -H 'X-CSRFTOKEN: fVFw5hgthYhem4QtYrX1iImFLWhyfLxAwf73r7qmdFdGBVR2ISIS30XAYBkU7aw9' \
+              -H 'Authorization: Token 7f843d73b3d549ba1e5b85a2c1bd1b323d4cd8e6' \
               -d '{
               "user": 2,
               "group": 1
