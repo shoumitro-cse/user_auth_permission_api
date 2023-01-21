@@ -21,4 +21,7 @@ urlpatterns = [
     path('login/', views.SigninView.as_view(), name='login'),
     #  This URL is used to logout
     path('logout/', views.LogoutView.as_view(), name='logout'),
+
+    #  This URL is used to logout
+    path('password-reset/', views.PasswordResetView.as_view(), name='password_reset'),
 ]

@@ -166,3 +166,6 @@ SPECTACULAR_SETTINGS = {
 
 ACCESS_TOKEN_LIFETIME = timezone.timedelta(minutes=60*3)
 REFRESH_TOKEN_LIFETIME = timezone.timedelta(days=7)
+
+
+FROM_EMAIL_MAIN = "myemail@gmail.com"
