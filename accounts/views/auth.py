@@ -1,13 +1,14 @@
 from django.contrib.auth import authenticate
 from django.core.mail import send_mail
 from django.utils import timezone
+from jwt import PyJWTError
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from django.conf import settings
 from accounts.models import User, UserToken
-from accounts.serializers import PasswordResetSerializer
+from accounts.serializers import PasswordResetSerializer, PasswordResetConfirmSerializer
 from accounts.serializers.auth import SigninSerializer
 import jwt
 
@@ -73,7 +74,7 @@ class PasswordResetView(APIView):
         user = request.user
         expire = timezone.now() + timezone.timedelta(minutes=5)
         data = {
-            'user': user.email,
+            'user': user.id,
             'email': email,
             'exp': expire
         }
@@ -82,9 +83,44 @@ class PasswordResetView(APIView):
         message = f"Dear {user.username},<br> Forgot your password. " \
                   f"We received a request to reset the password of your account.<br/>" \
                   f"To reset your password please click here<br>" \
-                  f"<a href='{domain}/confirm-reset-password/{token}/'>Click Here</a>"
+                  f"<a href='{domain}/auth/confirm-reset-password/{token}/'>Click Here</a>"
         mail_subject = f'Please confirm your reset password.'
 
         # send_mail(mail_subject, message, settings.FROM_EMAIL_MAIN, [email, ],
         #           html_message=message, fail_silently=False, )
         print(message)
+
+
+class PasswordResetConfirmView(APIView):
+    serializer_class = PasswordResetConfirmSerializer
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        if serializer.is_valid():
+            new_password = serializer.validated_data.get('new_password')
+            confirm_password = serializer.validated_data.get('confirm_password')
+            user_obj = serializer.validated_data.get('user')
+            if new_password == confirm_password:
+                user_obj.set_password(new_password)
+                user_obj.save()
+            return Response({"status": status.HTTP_200_OK}, status=status.HTTP_200_OK)
+        return Response({"status": status.HTTP_400_BAD_REQUEST}, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request, *args, **kwargs):
+        token = kwargs.get("token")
+        # print(token)
+        verify, user = self.confirm_send_to_email(request, token)
+        if not verify:
+            return Response({"status": status.HTTP_400_BAD_REQUEST}, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"status": status.HTTP_200_OK, "user": user}, status=status.HTTP_200_OK)
+
+    @staticmethod
+    def confirm_send_to_email(request, token):
+        try:
+            payload = jwt.decode(token, settings.SECRET_KEY, algorithms=["HS256"])
+            user = payload.get("user")
+            if str(request.user.id) == str(user):
+                return True, user
+        except PyJWTError as e:
+            print(e)
+        return False, None

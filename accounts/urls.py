@@ -24,4 +24,6 @@ urlpatterns = [
 
     #  This URL is used to logout
     path('password-reset/', views.PasswordResetView.as_view(), name='password_reset'),
+    path('confirm-reset-password/<str:token>/', views.PasswordResetConfirmView.as_view(),
+         name='password_reset_confirm'),
 ]
