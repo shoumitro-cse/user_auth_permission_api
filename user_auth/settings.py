@@ -190,4 +190,6 @@ EXEMPT_URLS = [
     ("auth/login/", "POST"),
     ("admin/", "POST"),
     ("admin/", "GET"),
+    ("admin/login/", "POST"),
+    ("admin/login/", "GET"),
 ]

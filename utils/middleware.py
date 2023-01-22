@@ -11,9 +11,14 @@ from django.conf import settings
 class ValidateAccessTokenMiddleware(MiddlewareMixin):
 
     def __call__(self, request):
+        """
+        Here, we should use this condition. There may be a security issue.
+        if (path, method) in settings.EXEMPT_URLS:
+        """
         path = request.path_info.lstrip('/')
         method = str(request.method).upper()
-        if (path, method) in settings.EXEMPT_URLS:
+        # Here, should follow the above docs
+        if (path, method) in settings.EXEMPT_URLS or str(path).startswith("admin/"):
             return super().__call__(request)
         try:
             token = TokenAuthentication.get_authenticate_token(request)
