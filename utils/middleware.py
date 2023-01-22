@@ -18,14 +18,16 @@ class ValidateAccessTokenMiddleware(MiddlewareMixin):
         path = request.path_info.lstrip('/')
         method = str(request.method).upper()
         # Here, should follow the above docs
-        if (path, method) in settings.EXEMPT_URLS or str(path).startswith("admin/"):
+        if (path, method) in settings.EXEMPT_URLS or \
+                str(path).startswith("admin/") or str(path).startswith("api/"):
             return super().__call__(request)
         try:
             token = TokenAuthentication.get_authenticate_token(request)
-            verify, user = self.verify_access_token(token)
-            if verify:
-                request.user = user
-                return super().__call__(request)
+            if token:
+                verify, user = self.verify_access_token(token)
+                if verify:
+                    request.user = user
+                    return super().__call__(request)
         except KeyError as e:
             pass
         return self.response_render({"token": "Invalid Access Token or expired!"})

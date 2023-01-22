@@ -85,7 +85,7 @@ each api, please keep your eye on each API doc.
 protocol = http, https
 domain = localhost or others
 port = 80, 8000 etc
-{protocol}://{domain}:{port}/ (for API HTTP methods and descriptions)
+{protocol}://{domain}:{port}/api/ (for API HTTP methods and descriptions)
 {protocol}://{domain}:{port}/api/redocs/
 {protocol}://{domain}:{port}/api/schema/ (for download API ymal file)
 ```
