@@ -26,8 +26,36 @@ mv staticfiles static
 python manage.py runserver
 ```
 
-### curl cmd
+### Sample of curl command code
 ```angular2html
+
+# user register
+curl -X 'POST' \
+  'http://localhost:8000/auth/user-list-or-register/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -H 'X-CSRFTOKEN: KX9M9ee2RgDq2k9xEWmqDpHGGFsH4EQQAnoZBK2e33LrfvOjAr4M5EsSqKd5KCvy' \
+  -d '{
+  "username": "shoumitro23",
+  "password": "1111",
+  "first_name": "shoumitro",
+  "last_name": "ray",
+  "email": "shoumitro23@gmail.com",
+  "user_type": 1,
+  "mobile": "01987543218",
+  "address": "Mirpur, Dhaka."
+}'
+
+# signin
+curl -X 'POST' \
+  'http://localhost:8000/auth/login/' \
+  -H 'accept: application/json' \
+  -H 'Content-Type: application/json' \
+  -H 'X-CSRFTOKEN: KX9M9ee2RgDq2k9xEWmqDpHGGFsH4EQQAnoZBK2e33LrfvOjAr4M5EsSqKd5KCvy' \
+  -d '{
+  "username": "shoumitro23",
+  "password": "1111"
+}'
 
 # to see user list
 curl -X 'GET' 'http://localhost:8000/auth/user-list-or-register/' \
@@ -57,7 +85,7 @@ each api, please keep your eye on each API doc.
 protocol = http, https
 domain = localhost or others
 port = 80, 8000 etc
-{protocol}://{domain}:{port}/api/docs/ (for API HTTP methods and descriptions)
+{protocol}://{domain}:{port}/ (for API HTTP methods and descriptions)
 {protocol}://{domain}:{port}/api/redocs/
 {protocol}://{domain}:{port}/api/schema/ (for download API ymal file)
 ```
@@ -65,10 +93,14 @@ port = 80, 8000 etc
 ### API document picture
 ![](https://github.com/shoumitro-cse/user_auth_permission_api/blob/main/screenshot/api.png?raw=true)
 
+### user signup
+![](https://github.com/shoumitro-cse/user_auth_permission_api/blob/main/screenshot/register.png?raw=true)
+
+### user login
+![](https://github.com/shoumitro-cse/user_auth_permission_api/blob/main/screenshot/login.png?raw=true)
 
 ### for column permission
 ![](https://github.com/shoumitro-cse/user_auth_permission_api/blob/main/screenshot/column_perm.png?raw=true)
-
 
 ### for admin permission
 ![](https://github.com/shoumitro-cse/user_auth_permission_api/blob/main/screenshot/super_user.png?raw=true)

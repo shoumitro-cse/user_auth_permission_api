@@ -145,8 +145,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 5,
     'DATE_FORMAT': "%d %b %Y",
     'DEFAULT_AUTHENTICATION_CLASSES': [
-        # 'rest_framework.authentication.SessionAuthentication',
-        # 'rest_framework.authentication.BasicAuthentication'
+        'rest_framework.authentication.BasicAuthentication',
+        'rest_framework.authentication.SessionAuthentication',
         'utils.authentication.TokenAuthentication'
     ],
     'DEFAULT_PERMISSION_CLASSES': [
