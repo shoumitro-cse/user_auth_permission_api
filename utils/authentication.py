@@ -26,7 +26,10 @@ class TokenAuthentication(BaseAuthentication):
     """
 
     def authenticate(self, request):
-        return self.authenticate_credentials(self.get_authenticate_token(request))
+        token = self.get_authenticate_token(request)
+        if token:
+            return self.authenticate_credentials(token)
+        return None
 
     @staticmethod
     def get_authenticate_token(request):

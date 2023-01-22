@@ -1,22 +1,20 @@
-from django.utils.deprecation import MiddlewareMixin
 from rest_framework.response import Response
 from rest_framework import status
 from django.utils import timezone
 from utils.authentication import TokenAuthentication
 from utils.renderers import JSONRenderer
-from django.utils.functional import SimpleLazyObject
 from django.utils.deprecation import MiddlewareMixin
-from django.contrib.auth.models import AnonymousUser
-from django.contrib.auth.middleware import get_user
 from accounts.models import UserToken
-from django.conf import LazySettings
-
-settings = LazySettings()
+from django.conf import settings
 
 
 class ValidateAccessTokenMiddleware(MiddlewareMixin):
 
     def __call__(self, request):
+        path = request.path_info.lstrip('/')
+        method = str(request.method).upper()
+        if (path, method) in settings.EXEMPT_URLS:
+            return super().__call__(request)
         try:
             token = TokenAuthentication.get_authenticate_token(request)
             verify, user = self.verify_access_token(token)
